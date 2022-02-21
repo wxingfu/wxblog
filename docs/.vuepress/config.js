@@ -8,6 +8,7 @@ module.exports = {
     description: '实践是检验真理的唯一标准',
     dest: './dist',
     port: '8088',
+    base: '/wxblog/',
     head: [
         ["link", {
             rel: "icon",
