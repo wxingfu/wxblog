@@ -8,6 +8,9 @@
     "docs:dev": "vuepress dev docs --open --host \"localhost\"",
     "docs:build": "vuepress build docs"
   },
+  "devDependencies": {
+    "vuepress": "^1.9.7"
+  },
   "dependencies": {
     "@vuepress-reco/vuepress-plugin-bgm-player": "^1.1.4",
     "@vuepress-reco/vuepress-plugin-bulletin-popover": "^1.6.0",

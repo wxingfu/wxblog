@@ -7,7 +7,7 @@ module.exports = {
     title: 'wblog',
     description: '实践是检验真理的唯一标准',
     dest: './dist',
-    port: '8080',
+    port: '8088',
     head: [
         ["link", {
             rel: "icon",
