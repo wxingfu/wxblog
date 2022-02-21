@@ -102,6 +102,8 @@ module.exports = [
     },
     {
         text: "Github",
-        link: "https://github.com/wxingfu/wxblog"
+        items: [
+            {text: "GitHub", link: "https://github.com/wxingfu/wxblog"}
+        ]
     }
 ]
