@@ -30,6 +30,10 @@ module.exports = [
         ]
     },
     {
+      text:'零散笔记',
+      link: '/PracticalSkills/'
+    },
+    {
         text: '工具箱',
         link: '/tools/'
     },
