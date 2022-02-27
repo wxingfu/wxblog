@@ -10,7 +10,8 @@ module.exports = [
             {
                 text: 'JavaSE',
                 items: [
-                    {text: 'Java基础', link: '/JavaSE/Java基础/'}
+                    {text: 'Java基础', link: '/JavaSE/Java基础/'},
+                    {text: '数据结构与算法', link: '/JavaSE/数据结构和算法/'}
                 ]
             },
             {
