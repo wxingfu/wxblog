@@ -7,6 +7,8 @@ tags:
 - 笔记
 ---
 
+[[toc]]
+
 ## 分页的总页数算法
 > 设总记录数：totalRecordl
 > 

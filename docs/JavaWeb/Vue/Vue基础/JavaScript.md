@@ -7,6 +7,8 @@ tags:
 - JavaScript
 ---
 
+[[toc]]
+
 ## JavaScript倒计时功能
 ```html
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
