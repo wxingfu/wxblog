@@ -1,6 +1,6 @@
 ---
 home: true
-heroText: (～￣▽￣)～
+heroText: null
 tagline: 纸上得来终觉浅，绝知此事要躬行
 bgImage: /img/common/hero.png
 bgImageStyle: {

@@ -7,7 +7,6 @@ tags:
 - HTML
 ---
 
-[[toc]]
 
 ## htmld的几种空白汉字占位符
 ```html

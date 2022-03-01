@@ -7,7 +7,6 @@ tags:
 - JavaScript
 ---
 
-[[toc]]
 
 ## JavaScript倒计时功能
 ```html

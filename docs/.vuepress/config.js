@@ -29,8 +29,10 @@ module.exports = {
             src: "/js/BaiduStatistics.js"
         }]
     ],
-    theme: "vuepress-theme-reco",
+    theme: "reco",
+    noFoundPageByTencent: false, // 关闭404腾讯公益
     themeConfig: {
+        // logo: '/head.png',
         nav,
         sidebar,
         subSidebar: "auto",//在所有页面中启用自动生成子侧边栏，原 sidebar 仍然兼容

@@ -1,13 +1,21 @@
 ---
 title: 数据结构与算法
-date: 2022-02-27
+date: 2022-03-01
+author: wxingfu
+subSidebar: true
 categories:
 - 数据结构与算法
 tags:
 - 数据结构与算法
+publish: true
+sticky: 1
 ---
 
-[[toc]]
+::: tip
+数据结构与算法非常重要，要抓紧学习和练题
+:::
+
+
 
 ## 二叉查找树
 
