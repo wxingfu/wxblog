@@ -33,7 +33,7 @@ module.exports = {
     themeConfig: {
         nav,
         sidebar,
-        subSidebar: "auto",
+        // subSidebar: "auto",
         type: "blog",
         blogConfig: {
             category: {
