@@ -1,6 +1,6 @@
 ---
 title: 零散笔记
-date: 2022-03-06
+date: 2022-04-13
 categories:
 - 个人笔记
 tags:
@@ -12,6 +12,374 @@ tags:
 :::
 
 <!--more-->
+
+
+
+## Java BigDecimal
+
+
+简介:
+> Java在java.math包中提供的API类BigDecimal，用来对超过16位有效位的数进行精确的运算
+> 
+> 对于不需要准确计算精度的数字，可直接使用Float和Double处理，但是Double.valueOf(String) 和Float.valueOf(String)会丢失精度。
+> 故在开发中，如果我们需要精确计算的结果，则需要使用BigDecimal类来操作
+
+
+构造函数:
+> BigDecimal(int), 创建一个具有参数所指定整数值的对象
+>
+> BigDecimal(double), 创建一个具有参数所指定双精度值的对象
+>
+> BigDecimal(long), 创建一个具有参数所指定长整数值的对象
+>
+> BigDecimal(String), 创建一个具有参数所指定以字符串表示的数值的对象, **推荐使用**
+> 
+> 1.参数类型为double的构造方法的结果有一定的不可预知性
+> 2.String 构造方法是完全可预知的
+> 3.当double必须用作BigDecimal的源时, 先使用Double.toString(double)方法，然后使用BigDecimal(String)构造方法，将double转换为String
+
+
+常用方法:
+> add(BigDecimal), BigDecimal对象中的值相加，返回BigDecimal对象
+>
+> subtract(BigDecimal), BigDecimal对象中的值相减，返回BigDecimal对象
+>
+> multiply(BigDecimal), BigDecimal对象中的值相乘，返回BigDecimal对象
+>
+> divide(BigDecimal), BigDecimal对象中的值相除，返回BigDecimal对象
+>
+> toString(), 将BigDecimal对象中的值转换成字符串
+>
+> doubleValue(), 将BigDecimal对象中的值转换成双精度数
+>
+> floatValue(), 将BigDecimal对象中的值转换成单精度数
+>
+> longValue(), 将BigDecimal对象中的值转换成长整数
+>
+> intValue(), 将BigDecimal对象中的值转换成整数
+
+
+BigDecimal大小比较:
+> java中对BigDecimal比较大小一般用的是bigdemical的compareTo方法
+> ```java
+> int a = bigdemical.compareTo(bigdemical2)
+> a = -1,表示bigdemical小于bigdemical2；
+> a = 0,表示bigdemical等于bigdemical2；
+> a = 1,表示bigdemical大于bigdemical2；
+> ```
+
+
+BigDecimal格式化:
+> 由于NumberFormat类的format()方法可以使用BigDecimal对象作为其参数，可以利用BigDecimal对超出16位有效数字的货币值，百分值，以及一般数值进行格式化控制。 
+> 
+> 以利用BigDecimal对货币和百分比格式化为例。首先，创建BigDecimal对象，进行BigDecimal的算术运算后，
+> 分别建立对货币和百分比格式化的引用，最后利用BigDecimal对象作为format()方法的参数，输出其格式化的货币值和百分比。
+> ```java
+> NumberFormat currency = NumberFormat.getCurrencyInstance(); //建立货币格式化引用
+> NumberFormat percent = NumberFormat.getPercentInstance();  //建立百分比格式化引用
+> percent.setMaximumFractionDigits(3); //百分比小数点最多3位
+>
+> BigDecimal loanAmount = new BigDecimal("15000.48"); //贷款金额
+> BigDecimal interestRate = new BigDecimal("0.008"); //利率
+> BigDecimal interest = loanAmount.multiply(interestRate); //相乘
+>
+> System.out.println("贷款金额:\t" + currency.format(loanAmount));
+> System.out.println("利率:\t" + percent.format(interestRate));
+> System.out.println("利息:\t" + currency.format(interest));
+> ```
+
+
+工具类:
+```java
+/**
+ * 用于高精确处理常用的数学运算
+ */
+public class ArithmeticUtils {
+    //默认除法运算精度
+    private static final int DEF_DIV_SCALE = 10;
+
+    /**
+     * 提供精确的加法运算
+     *
+     * @param v1 被加数
+     * @param v2 加数
+     * @return 两个参数的和
+     */
+
+    public static double add(double v1, double v2) {
+        BigDecimal b1 = new BigDecimal(Double.toString(v1));
+        BigDecimal b2 = new BigDecimal(Double.toString(v2));
+        return b1.add(b2).doubleValue();
+    }
+
+    /**
+     * 提供精确的加法运算
+     *
+     * @param v1 被加数
+     * @param v2 加数
+     * @return 两个参数的和
+     */
+    public static BigDecimal add(String v1, String v2) {
+        BigDecimal b1 = new BigDecimal(v1);
+        BigDecimal b2 = new BigDecimal(v2);
+        return b1.add(b2);
+    }
+
+    /**
+     * 提供精确的加法运算
+     *
+     * @param v1    被加数
+     * @param v2    加数
+     * @param scale 保留scale 位小数
+     * @return 两个参数的和
+     */
+    public static String add(String v1, String v2, int scale) {
+        if (scale < 0) {
+            throw new IllegalArgumentException(
+                    "The scale must be a positive integer or zero");
+        }
+        BigDecimal b1 = new BigDecimal(v1);
+        BigDecimal b2 = new BigDecimal(v2);
+        return b1.add(b2).setScale(scale, BigDecimal.ROUND_HALF_UP).toString();
+    }
+
+    /**
+     * 提供精确的减法运算
+     *
+     * @param v1 被减数
+     * @param v2 减数
+     * @return 两个参数的差
+     */
+    public static double sub(double v1, double v2) {
+        BigDecimal b1 = new BigDecimal(Double.toString(v1));
+        BigDecimal b2 = new BigDecimal(Double.toString(v2));
+        return b1.subtract(b2).doubleValue();
+    }
+
+    /**
+     * 提供精确的减法运算。
+     *
+     * @param v1 被减数
+     * @param v2 减数
+     * @return 两个参数的差
+     */
+    public static BigDecimal sub(String v1, String v2) {
+        BigDecimal b1 = new BigDecimal(v1);
+        BigDecimal b2 = new BigDecimal(v2);
+        return b1.subtract(b2);
+    }
+
+    /**
+     * 提供精确的减法运算
+     *
+     * @param v1    被减数
+     * @param v2    减数
+     * @param scale 保留scale 位小数
+     * @return 两个参数的差
+     */
+    public static String sub(String v1, String v2, int scale) {
+        if (scale < 0) {
+            throw new IllegalArgumentException(
+                    "The scale must be a positive integer or zero");
+        }
+        BigDecimal b1 = new BigDecimal(v1);
+        BigDecimal b2 = new BigDecimal(v2);
+        return b1.subtract(b2).setScale(scale, BigDecimal.ROUND_HALF_UP).toString();
+    }
+
+    /**
+     * 提供精确的乘法运算
+     *
+     * @param v1 被乘数
+     * @param v2 乘数
+     * @return 两个参数的积
+     */
+    public static double mul(double v1, double v2) {
+        BigDecimal b1 = new BigDecimal(Double.toString(v1));
+        BigDecimal b2 = new BigDecimal(Double.toString(v2));
+        return b1.multiply(b2).doubleValue();
+    }
+
+    /**
+     * 提供精确的乘法运算
+     *
+     * @param v1 被乘数
+     * @param v2 乘数
+     * @return 两个参数的积
+     */
+    public static BigDecimal mul(String v1, String v2) {
+        BigDecimal b1 = new BigDecimal(v1);
+        BigDecimal b2 = new BigDecimal(v2);
+        return b1.multiply(b2);
+    }
+
+    /**
+     * 提供精确的乘法运算
+     *
+     * @param v1    被乘数
+     * @param v2    乘数
+     * @param scale 保留scale 位小数
+     * @return 两个参数的积
+     */
+    public static double mul(double v1, double v2, int scale) {
+        BigDecimal b1 = new BigDecimal(Double.toString(v1));
+        BigDecimal b2 = new BigDecimal(Double.toString(v2));
+        return round(b1.multiply(b2).doubleValue(), scale);
+    }
+
+    /**
+     * 提供精确的乘法运算
+     *
+     * @param v1    被乘数
+     * @param v2    乘数
+     * @param scale 保留scale 位小数
+     * @return 两个参数的积
+     */
+    public static String mul(String v1, String v2, int scale) {
+        if (scale < 0) {
+            throw new IllegalArgumentException(
+                    "The scale must be a positive integer or zero");
+        }
+        BigDecimal b1 = new BigDecimal(v1);
+        BigDecimal b2 = new BigDecimal(v2);
+        return b1.multiply(b2).setScale(scale, BigDecimal.ROUND_HALF_UP).toString();
+    }
+
+    /**
+     * 提供（相对）精确的除法运算，当发生除不尽的情况时，精确到
+     * 小数点以后10位，以后的数字四舍五入
+     *
+     * @param v1 被除数
+     * @param v2 除数
+     * @return 两个参数的商
+     */
+
+    public static double div(double v1, double v2) {
+        return div(v1, v2, DEF_DIV_SCALE);
+    }
+
+    /**
+     * 提供（相对）精确的除法运算。当发生除不尽的情况时，由scale参数指
+     * 定精度，以后的数字四舍五入
+     *
+     * @param v1    被除数
+     * @param v2    除数
+     * @param scale 表示表示需要精确到小数点以后几位。
+     * @return 两个参数的商
+     */
+    public static double div(double v1, double v2, int scale) {
+        if (scale < 0) {
+            throw new IllegalArgumentException("The scale must be a positive integer or zero");
+        }
+        BigDecimal b1 = new BigDecimal(Double.toString(v1));
+        BigDecimal b2 = new BigDecimal(Double.toString(v2));
+        return b1.divide(b2, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
+
+    /**
+     * 提供（相对）精确的除法运算。当发生除不尽的情况时，由scale参数指
+     * 定精度，以后的数字四舍五入
+     *
+     * @param v1    被除数
+     * @param v2    除数
+     * @param scale 表示需要精确到小数点以后几位
+     * @return 两个参数的商
+     */
+    public static String div(String v1, String v2, int scale) {
+        if (scale < 0) {
+            throw new IllegalArgumentException("The scale must be a positive integer or zero");
+        }
+        BigDecimal b1 = new BigDecimal(v1);
+        BigDecimal b2 = new BigDecimal(v1);
+        return b1.divide(b2, scale, BigDecimal.ROUND_HALF_UP).toString();
+    }
+
+    /**
+     * 提供精确的小数位四舍五入处理
+     *
+     * @param v     需要四舍五入的数字
+     * @param scale 小数点后保留几位
+     * @return 四舍五入后的结果
+     */
+    public static double round(double v, int scale) {
+        if (scale < 0) {
+            throw new IllegalArgumentException("The scale must be a positive integer or zero");
+        }
+        BigDecimal b = new BigDecimal(Double.toString(v));
+        return b.setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
+
+    /**
+     * 提供精确的小数位四舍五入处理
+     *
+     * @param v     需要四舍五入的数字
+     * @param scale 小数点后保留几位
+     * @return 四舍五入后的结果
+     */
+    public static String round(String v, int scale) {
+        if (scale < 0) {
+            throw new IllegalArgumentException(
+                    "The scale must be a positive integer or zero");
+        }
+        BigDecimal b = new BigDecimal(v);
+        return b.setScale(scale, BigDecimal.ROUND_HALF_UP).toString();
+    }
+
+    /**
+     * 取余数
+     *
+     * @param v1    被除数
+     * @param v2    除数
+     * @param scale 小数点后保留几位
+     * @return 余数
+     */
+    public static String remainder(String v1, String v2, int scale) {
+        if (scale < 0) {
+            throw new IllegalArgumentException(
+                    "The scale must be a positive integer or zero");
+        }
+        BigDecimal b1 = new BigDecimal(v1);
+        BigDecimal b2 = new BigDecimal(v2);
+        return b1.remainder(b2).setScale(scale, BigDecimal.ROUND_HALF_UP).toString();
+    }
+
+    /**
+     * 取余数  BigDecimal
+     *
+     * @param v1    被除数
+     * @param v2    除数
+     * @param scale 小数点后保留几位
+     * @return 余数
+     */
+    public static BigDecimal remainder(BigDecimal v1, BigDecimal v2, int scale) {
+        if (scale < 0) {
+            throw new IllegalArgumentException(
+                    "The scale must be a positive integer or zero");
+        }
+        return v1.remainder(v2).setScale(scale, BigDecimal.ROUND_HALF_UP);
+    }
+
+    /**
+     * 比较大小
+     *
+     * @param v1 被比较数
+     * @param v2 比较数
+     * @return 如果v1 大于v2 则 返回true 否则false
+     */
+    public static boolean compare(String v1, String v2) {
+        BigDecimal b1 = new BigDecimal(v1);
+        BigDecimal b2 = new BigDecimal(v2);
+        int bj = b1.compareTo(b2);
+        boolean res;
+        if (bj > 0)
+            res = true;
+        else
+            res = false;
+        return res;
+    }
+}
+```
+---
 
 ## Thread.sleep
 
