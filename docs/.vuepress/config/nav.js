@@ -26,6 +26,12 @@ module.exports = [
                     {text: 'Servlet基础', link: '/JavaWeb/Servlet/Servlet基础/'},
                     {text: 'Vue基础', link: '/JavaWeb/Vue/Vue基础/'}
                 ]
+            },
+            {
+                text: 'Linux',
+                items: [
+                    {text: 'Linux', link: '/Linux/Linux基础/'}
+                ]
             }
         ]
     },
