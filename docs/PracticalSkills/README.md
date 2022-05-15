@@ -1,6 +1,6 @@
 ---
 title: 零散笔记
-date: 2022-04-13
+date: 2022-05-15
 categories:
 - 个人笔记
 tags:
@@ -185,7 +185,7 @@ public class SyncTest {
 > 
 > 并且锁只会升级，不会降级
 
-![锁升级](pic/锁升级.png)
+![锁升级](/pic/锁升级.png)
 
 
 ---
