@@ -13,6 +13,182 @@ tags:
 
 <!--more-->
 
+## Synchronized
+
+**概念**
+> Synchronized是Java中的一个关键字，中文被称为“同步锁”。
+> 它是一种锁，当某一时刻有多个线程对同一段程序进行操作时，能够保证只有一个线程能够获取到资源，因此保证了线程安全
+
+**三种主要使用方式**
+- 修饰普通方法，锁作用于当前对象实例。
+- 修饰静态方法，锁作用于类的Class实例。
+- 修饰代码块，作用于当前对象实例，需要指定加锁对象。 
+
+**普通方法**
+
+Synchronized是一个关键字，当作用于一个普通方法的时候，
+这个方法便被加上了同步锁，意味着某一时刻只有一个线程可以操作访问这个方法：
+
+```java
+public class SyncTest {
+    public synchronized void method1(){
+        try {
+            System.out.println(Thread.currentThread().getName());
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] agrs) throws InterruptedException {
+        final SyncTest st = new SyncTest();
+
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                st.method1();
+            }
+        },"线程1获取到资源");
+
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                st.method1();
+            }
+        },"线程2获取到资源");
+
+        t1.start();
+        t2.start();
+    }
+}
+```
+
+**静态方法**
+
+静态方法和普通方法的区别只有一个，就是Synchronized关键字是作用于静态方法的。
+但是仅仅这个区别，代表着锁的对象也是不同的。
+原因在于Java的静态关键字它和实例对象没有任何关系，
+它作用的资源是在类的初始化时期就加载的，所以它只能由每个类唯一的Class对象调用。
+当它作用于一个Class对象时，它就会将这一整个类都锁住，简称"类锁"：
+
+```java
+public class SyncTest {
+    public static synchronized void method1(){
+        try {
+            System.out.println(Thread.currentThread().getName());
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] agrs) throws InterruptedException {
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SyncTest.method1();
+            }
+        },"线程1获取到资源");
+
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SyncTest.method1();
+            }
+        },"线程2获取到资源");
+
+        t1.start();
+        t2.start();
+    }
+}
+```
+
+**代码块**
+
+Synchronized可以锁住普通方法，也可以锁住一个类，它还能锁住一段简易的代码块：
+
+```java
+public class SyncTest {
+    public synchronized void method1(){
+        synchronized (this) {
+            // 逻辑代码
+        }
+    }
+}
+```
+代码块锁住的对象就是后面括号里的东西。
+比如synchronized (this)，意味着只有当前对象才可以访问这段代码块，
+也可以定义为其它对象。
+
+**Synchronized原理**
+
+无论是synchronized代码块还是synchronized方法，
+其线程安全的语义实现最终依赖的都是monitor，它才是真正意义上的锁[^1]。
+
+[^1]:暂时不理解原理
+
+**锁的优化**
+
+**自旋锁**
+> 自旋锁顾名思义就是自旋。
+> 当一个线程在获取锁的时候，如果该锁已被其它线程获取到，
+> 那么该线程就会去循环自旋获取锁，不停地判断该锁是否能够已经被释放，
+> 自选直到获取到锁才会退出循环。
+> 通常该自选在源码中都是通过for(; ;)或者while(true)这样的操作实现
+> 
+> 自旋就代表着占用cpu资源，
+> 使用自旋锁的目的是为了避免线程在阻塞和唤醒状态之间切换而占用资源，
+> 毕竟线程从阻塞状态切换到唤醒状态需要CPU从用户态转化为内核态，
+> 而频繁的状态切换就会导致CPU的资源浪费，所以引入了自选锁。
+> 但是自旋锁也必定要设置一个自旋的阈值，否则因为自旋长期占用CPU核心数，也是一种资源的浪费
+> JDK1.6默认自旋次数为10
+
+
+**锁消除**
+> 锁消除指的是虚拟机即时编译器在运行的时，
+> 对一些代码上要求同步，但是被检测到不可能存在共享数据竞争的锁进行削除。
+> 如何确定这个锁是否需要进行削除, 主要来源于逃逸分析的判断，
+> 如果判断到一段代码中，在堆上的所有数据都不会逃逸出去被其他线程访问到，
+> 那就可以把它们当作栈上数据对待，认为它们是线程私有的，同步加锁自然就无须进行。
+> 
+> 锁消除，即JVM虚拟机在判断一段代码没必要加锁后，会消除该锁的存在。
+
+**锁粗化**
+> 锁粗化指的是在JIT编译时，发现如果有一段代码中频繁的加锁释放锁，
+> 会将前后的锁合并为一个锁，避免频繁加锁释放锁。
+> 如循环中使用synchronized关键字
+> 
+> 锁粗化，即通过增加锁的范围，减少锁的数量来减少开销
+
+**偏向锁**
+> 偏向锁是JVM认为没有发生并发的场景下提供的锁。
+
+**轻量级锁**
+> 轻量级锁是JDK 1.6之中加入的新型锁机制，
+> 它名字中的“轻量级”是相对于使用monitor的传统锁而言的，
+> 因此传统的锁机制就称为“重量级”锁。
+> 
+> 引入轻量级锁的目的在于：在多线程交替执行同步块的情况下，尽量避免重量级锁引起的性能消耗，
+> 但是如果多个线程在同一时刻进入临界区，会导致轻量级锁膨胀升级重量级锁，
+> 所以轻量级锁的出现并非是要替代重量级锁。
+
+**重量级锁**
+> 在JDK1.6之前，Synchronized就是一把“重量级锁”。
+> 它需要依赖操作系统级别的mutex和condition variable来实现。
+> 重量级锁会让抢占锁的线程从用户态转变为内核态，所以开销很大
+
+**锁升级**
+
+> 锁升级，顾名思义就是锁的等级不断上升。
+> 因为锁是会消耗性能的，所以锁不断升级，它的性能就会越差。
+> 当然这一切都是为了满足安全、复杂的业务场景。
+> 
+> 并且锁只会升级，不会降级
+
+![锁升级](/pic/锁升级.png)
+
+
+---
 
 ## 守护线程与非守护线程的区别
 
