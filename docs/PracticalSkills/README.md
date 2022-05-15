@@ -185,7 +185,7 @@ public class SyncTest {
 > 
 > 并且锁只会升级，不会降级
 
-![锁升级](/pic/锁升级.png)
+![锁升级](pic/锁升级.png)
 
 
 ---
