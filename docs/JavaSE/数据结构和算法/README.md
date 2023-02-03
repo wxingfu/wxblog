@@ -17,6 +17,20 @@ sticky: 1
 
 <!-- more -->
 
+## 求解最大公约数
+
+> gcd(a,b) = gcd(b,a mod b) (不妨设a>b 且r=a mod b ,r不为0)
+> 
+> 欧几里得算法又称辗转相除法，是指用于计算两个非负整数a，b的最大公约数
+> 
+
+求解代码
+```java
+public int gcd(int a, int b) {
+    return b == 0 ? a : gcd(b, a % b);
+}
+```
+
 ## 二叉查找树
 
 **二叉查找树（Binary Search Tree），也称为二叉查找树、有序二叉树（ordered binary tree）或排序二叉树（sorted binary tree），是指一棵空树或者具有下列性质的二叉树：**
