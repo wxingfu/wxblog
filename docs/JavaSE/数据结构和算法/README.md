@@ -18,8 +18,8 @@ sticky: 1
 <!-- more -->
 
 ## 到底行不行啊啊啊啊
-> aaaaaaaaaaaaaaaaaaaaa
-> 啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊
+> aaaaaaa
+> 啊啊啊啊
 
 ## 求解最大公约数
 
