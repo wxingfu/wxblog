@@ -3,6 +3,9 @@ name: Deploy GitHub Pages
 # 触发条件：在 push 到 master 分支后
 on: [push]
 
+permissions:
+  contents: write
+
 # 任务
 jobs:
   build-and-deploy:
@@ -11,7 +14,7 @@ jobs:
     steps:
       # 拉取代码
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           persist-credentials: false
 
@@ -21,9 +24,9 @@ jobs:
 
       # 部署到 GitHub Pages
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN }}
           ssh-key: ${{ secrets.DEPLOY_KEY }}
-          BRANCH: gh-pages
-          FOLDER: docs/.vuepress/dist
+          branch: gh-pages
+          folder: docs/.vuepress/dist
