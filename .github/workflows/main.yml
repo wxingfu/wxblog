@@ -13,5 +13,6 @@ jobs:
         uses: jenkey2011/vuepress-deploy@master
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          # 初次配置可能需要设置git config --global user.name "wxingfu"和git config --global user.email "wxffxw.664587@gmail.com"
           BUILD_SCRIPT: git config --global --add safe.directory "*" && npm install && npm run docs:build
           BUILD_DIR: docs/.vuepress/dist/
