@@ -1,0 +1,4 @@
+deploy:
+  type: git
+  repo: git@github.com:wxingfu/wxblog.git
+  branch: master
