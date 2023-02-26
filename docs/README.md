@@ -1,7 +1,7 @@
 ---
 home: true
 heroText: null
-tagline: 纸上得来终觉浅，绝知此事要躬行
+tagline: 世界上并没有完美的程序，但我们并不因此而沮丧，因为写程序本来就是一个不断追求完美的过程
 bgImage: /img/common/hero.png
 bgImageStyle: {
     height: '520px'
