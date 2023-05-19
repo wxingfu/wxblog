@@ -20,7 +20,7 @@
 
 ### Forest 的架构
 
-<img src="forest.assets/forest-architecture.svg" alt="forest-architecture" style="zoom: 80%;" />
+<img src="/images/forest-architecture.svg" alt="forest-architecture" style="zoom: 80%;" />
 
 #### **前端部分**
 
