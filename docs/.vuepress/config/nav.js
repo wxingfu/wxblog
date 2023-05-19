@@ -32,12 +32,18 @@ module.exports = [
                 items: [
                     {text: 'Linux', link: '/Linux/Linux基础/'}
                 ]
+            },
+            {
+                text: 'Spring系列',
+                items: [
+                    {text: 'Foest使用介绍', link: '/spring/forest/'}
+                ]
             }
         ]
     },
     {
-      text:'零散笔记',
-      link: '/PracticalSkills/'
+        text: '零散笔记',
+        link: '/PracticalSkills/'
     },
     {
         text: '工具箱',
